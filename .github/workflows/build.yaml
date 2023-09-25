@@ -98,6 +98,13 @@ jobs:
                       type=semver,pattern=v{{major}}
                       type=sha
 
+            - name: Setup QEMU
+              uses: docker/setup-qemu-action@v3
+
+            - name: Set up Docker Buildx
+              id: buildx
+              uses: docker/setup-buildx-action@v3
+
             # Build and push
             #
             # - amd64 and arm64 (think future proof)
@@ -105,11 +112,13 @@ jobs:
             # - publish as a package for this repository
             #
             - name: Build and push image
-              uses: docker/build-push-action@v4
+              uses: docker/build-push-action@v5
               with:
                   provenance: true
+                  platforms: linux/arm64, linux/arm64
                   push: true
                   build-args: |
                       NODE_VERSION=${{env.NODE_VERSION}}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
+                  builder: ${{ steps.buildx.outputs.name }}
