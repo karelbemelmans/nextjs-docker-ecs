@@ -10,7 +10,6 @@ export class CdkStack extends cdk.Stack {
     const loadBalancedFargateService =
       new ecsPatterns.ApplicationLoadBalancedFargateService(this, "Service", {
         publicLoadBalancer: true,
-        redirectHTTP: true,
         memoryLimitMiB: 512,
         cpu: 256,
         healthCheckGracePeriod: cdk.Duration.seconds(5),
