@@ -109,5 +109,7 @@ jobs:
               with:
                   provenance: true
                   push: true
+                  build-args: |
+                      NODE_VERSION=${{env.NODE_VERSION}}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
