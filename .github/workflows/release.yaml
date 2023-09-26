@@ -44,7 +44,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ./task-definition.json
-          container-name: app
+          container-name: web
           image: ${{ env.IMAGE }}
           environment-variables: |
             DD_TAGS=git.commit.sha:${{ github.sha }},git.repository_url:github.com/${{ github.repository }}
