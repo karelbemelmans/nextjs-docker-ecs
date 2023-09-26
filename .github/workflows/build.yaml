@@ -30,10 +30,6 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
-            # This action makes sure that we keep the exact same names and tags
-            # as the source ones, we just prepend our own repository as a namespace
-            # before it.
-            #
             - name: Extract metadata (tags, labels) for Docker
               id: meta
               uses: docker/metadata-action@v5
@@ -47,12 +43,6 @@ jobs:
                       type=semver,pattern=v{{major}}
                       type=sha
 
-            # Build and push
-            #
-            # - amd64 and arm64 (think future proof)
-            # - we keep the exact same name and tag
-            # - publish as a package for this repository
-            #
             - name: Build and push image
               uses: docker/build-push-action@v5
               with:
