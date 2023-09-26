@@ -7,7 +7,6 @@ env:
   AWS_REGION: 'eu-north-1'
   CLUSTER: 'NextJsStack-EcsDefaultClusterMnL3mNNYN926A5246-XbxbwIMZCuyB'
   SERVICE: 'NextJsStack-Service9571FDD8-sGwmTu9RyG63'
-  IMAGE: 'ghcr.io/karelbemelmans/nextjs-docker'
   TASK_DEFINITION: 'NextJsStackServiceTaskDefD5B7AF72'
 
 jobs:
@@ -43,9 +42,7 @@ jobs:
         with:
           task-definition: ./task-definition.json
           container-name: web
-          image: '${{ env.IMAGE }}:main'
-          environment-variables: |
-            DD_TAGS=git.commit.sha:${{ github.sha }},git.repository_url:github.com/${{ github.repository }}
+          image: 'ghcr.io/${{ github.repository }}:${{ github.ref_name }}'
 
       - name: ECS deploy
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
