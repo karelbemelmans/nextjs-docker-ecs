@@ -44,6 +44,9 @@ jobs:
           task-definition: ./task-definition.json
           container-name: web
           image: 'ghcr.io/${{ github.repository }}:${{ github.ref_name }}'
+          environment-variables: |
+            DD_VERSION=${{ github.ref_name }}
+            DD_TAGS=git.commit.sha:${{ github.sha }},git.repository_url:github.com/${{ github.repository }}
 
       - name: ECS deploy
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
