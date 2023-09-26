@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 env:
+  AWS_REGION: 'eu-north-1'
   CLUSTER: 'NextJsStack-EcsDefaultClusterMnL3mNNYN926A5246-XbxbwIMZCuyB'
   SERVICE: 'NextJsStack-Service9571FDD8-sGwmTu9RyG63'
   IMAGE: 'ghcr.io/karelbemelmans/nextjs-docker:main'
@@ -18,6 +19,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       # Download the current task definition
       # Use jq to clean up fields we should not pass back in
