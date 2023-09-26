@@ -3,6 +3,12 @@ name: Deploy
 on:
   release:
     types: [created]
+  workflow_dispatch:
+
+env:
+  CLUSTER: 'NextJsStack-EcsDefaultClusterMnL3mNNYN926A5246-XbxbwIMZCuyB'
+  SERVICE: 'NextJsStack-Service9571FDD8-sGwmTu9RyG63'
+  IMAGE: 'ghcr.io/karelbemelmans/nextjs-docker:main'
 
 jobs:
   deploy:
@@ -11,3 +17,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Download the current task definition
+      # Use jq to clean up fields we should not pass back in
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition ${{ env.CLUSTER }}-${{ env.SERVICE }}-task-def \
+            --query taskDefinition \
+            --output json \
+            | jq '. | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)' \
+            > task-definition.json
+
+      # Update the task definition with the newly built Docker image
+      - name: Update ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ./task-definition.json
+          container-name: app
+          image: ${{ env.IMAGE }}
+          environment-variables: |
+            DD_TAGS=git.commit.sha:${{ github.sha }},git.repository_url:github.com/${{ github.repository }}
+
+      - name: ECS deploy
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.SERVICE }}
+          cluster: ${{ env.CLUSTER }}
+          wait-for-service-stability: true
