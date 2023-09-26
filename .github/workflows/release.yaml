@@ -9,6 +9,7 @@ env:
   CLUSTER: 'NextJsStack-EcsDefaultClusterMnL3mNNYN926A5246-XbxbwIMZCuyB'
   SERVICE: 'NextJsStack-Service9571FDD8-sGwmTu9RyG63'
   IMAGE: 'ghcr.io/karelbemelmans/nextjs-docker:main'
+  TASK_DEFINITION: 'NextJsStackServiceTaskDefD5B7AF72'
 
 jobs:
   deploy:
@@ -23,7 +24,7 @@ jobs:
       - name: Download task definition
         run: |
           aws ecs describe-task-definition \
-            --task-definition ${{ env.CLUSTER }}-${{ env.SERVICE }}-task-def \
+            --task-definition ${{ env.TASK_DEFINITION }} \
             --query taskDefinition \
             --output json \
             | jq '. | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)' \
