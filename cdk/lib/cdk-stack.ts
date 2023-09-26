@@ -23,6 +23,11 @@ export class CdkStack extends cdk.Stack {
 
     loadBalancedFargateService.targetGroup.configureHealthCheck({
       path: "/api/hello",
+      healthyHttpCodes: "200",
+      timeout: cdk.Duration.seconds(5),
+      healthyThresholdCount: 2,
+      unhealthyThresholdCount: 2,
+      interval: cdk.Duration.seconds(10),
     });
   }
 }
