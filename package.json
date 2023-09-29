@@ -1,19 +1,17 @@
 {
-	"private": true,
-	"scripts": {
-		"dev": "next dev",
-		"build": "next build"
-	},
-	"dependencies": {
-		"@typescript-eslint/eslint-plugin": "^6.7.3",
-		"next": "latest",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
-	},
-	"devDependencies": {
-		"@types/node": "20.6.5",
-		"@types/react": "18.2.22",
-		"prettier": "^3.0.3",
-		"typescript": "5.2.2"
-	}
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.6.5",
+    "@types/react": "18.2.22",
+    "typescript": "5.2.2"
+  }
 }
