@@ -6,5 +6,3 @@ My attempt to create a very clean NextJS project that created ECS infrastructure
 
 - Everything should use the node version from `.nvmrc``
 - Provide some nicer default homepage than the current NextJS default one
-- Integrate CDK nicely at the top level in NextJS, not just run it from a subdirectory
-- ECS deployment
