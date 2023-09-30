@@ -3,8 +3,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "lint": "next lint",
-    "cdk": "next cdk"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "latest",

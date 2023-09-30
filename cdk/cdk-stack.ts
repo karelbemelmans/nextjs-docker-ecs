@@ -24,14 +24,10 @@ export class CdkStack extends cdk.Stack {
     });
 
     // Load our existing Route53 zone
-    const route53Zone = route53.HostedZone.fromHostedZoneAttributes(
-      this,
-      "HostedZone",
-      {
-        hostedZoneId: hostedZoneId.valueAsString,
-        zoneName: hostedZoneName.valueAsString,
-      }
-    );
+    const route53Zone = route53.HostedZone.fromHostedZoneAttributes(this, "HostedZone", {
+      hostedZoneId: hostedZoneId.valueAsString,
+      zoneName: hostedZoneName.valueAsString,
+    });
 
     // Create a new certificate to be used by the ALB listener
     const certificate = new acm.Certificate(this, "Certificate", {
@@ -39,23 +35,20 @@ export class CdkStack extends cdk.Stack {
       validation: acm.CertificateValidation.fromDns(route53Zone),
     });
 
-    const loadBalancedFargateService =
-      new ecsPatterns.ApplicationLoadBalancedFargateService(this, "Service", {
-        publicLoadBalancer: true,
-        memoryLimitMiB: 512,
-        cpu: 256,
-        healthCheckGracePeriod: cdk.Duration.seconds(5),
-        taskImageOptions: {
-          image: ecs.ContainerImage.fromRegistry(
-            "ghcr.io/karelbemelmans/nextjs-docker:main"
-          ),
-          containerPort: 3000,
-        },
-        certificate: certificate,
-        redirectHTTP: true,
-        domainName: hostedName.valueAsString,
-        domainZone: route53Zone,
-      });
+    const loadBalancedFargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(this, "Service", {
+      publicLoadBalancer: true,
+      memoryLimitMiB: 512,
+      cpu: 256,
+      healthCheckGracePeriod: cdk.Duration.seconds(5),
+      taskImageOptions: {
+        image: ecs.ContainerImage.fromRegistry("ghcr.io/karelbemelmans/nextjs-docker:main"),
+        containerPort: 3000,
+      },
+      certificate: certificate,
+      redirectHTTP: true,
+      domainName: hostedName.valueAsString,
+      domainZone: route53Zone,
+    });
 
     loadBalancedFargateService.targetGroup.configureHealthCheck({
       path: "/api/hello",
