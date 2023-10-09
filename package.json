@@ -9,7 +9,7 @@
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "aws-cdk-lib": "2.99.1",
+    "aws-cdk-lib": "2.100.0",
     "constructs": "^10.3.0",
     "source-map-support": "^0.5.21"
   },
