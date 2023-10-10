@@ -1,3 +1,5 @@
+[![Build & Publish](https://github.com/karelbemelmans/nextjs-docker/actions/workflows/build.yaml/badge.svg)](https://github.com/karelbemelmans/nextjs-docker/actions/workflows/build.yaml)
+
 # NextJS, Docker and ECS
 
 My attempt to create a very clean NextJS project that created ECS infrastructure and deploys using Github Actions.
