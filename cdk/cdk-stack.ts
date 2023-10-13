@@ -1,7 +1,10 @@
 import * as cdk from "aws-cdk-lib";
+import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as route53 from "aws-cdk-lib/aws-route53";
+import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
+import * as cloudfront_origins from "aws-cdk-lib/aws-cloudfront-origins"
 import * as ecsPatterns from "aws-cdk-lib/aws-ecs-patterns";
 import { Construct } from "constructs";
 
@@ -35,6 +38,7 @@ export class CdkStack extends cdk.Stack {
       validation: acm.CertificateValidation.fromDns(route53Zone),
     });
 
+    // This will create an ALB listening on HTTP only
     const loadBalancedFargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(this, "Service", {
       publicLoadBalancer: true,
       memoryLimitMiB: 512,
@@ -44,10 +48,6 @@ export class CdkStack extends cdk.Stack {
         image: ecs.ContainerImage.fromRegistry("ghcr.io/karelbemelmans/nextjs-docker:main"),
         containerPort: 3000,
       },
-      certificate: certificate,
-      redirectHTTP: true,
-      domainName: hostedName.valueAsString,
-      domainZone: route53Zone,
     });
 
     loadBalancedFargateService.targetGroup.configureHealthCheck({
@@ -57,6 +57,30 @@ export class CdkStack extends cdk.Stack {
       healthyThresholdCount: 2,
       unhealthyThresholdCount: 2,
       interval: cdk.Duration.seconds(10),
+    });
+
+    const cloudFront = new cloudfront.Distribution(this, "CloudFrontDistribution", {
+      priceClass: cloudfront.PriceClass.PRICE_CLASS_100, // Let's keep things cheap for now
+      defaultBehavior: {
+
+        // We need to talk to our HTTP listener on the ALB
+        origin: new cloudfront_origins.LoadBalancerV2Origin(loadBalancedFargateService.loadBalancer, {
+          protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY,
+        }),
+
+        // Should be good enough for our case
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+
+        // Sane policies
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+        originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER,
+        responseHeadersPolicy:cloudfront.ResponseHeadersPolicy.SECURITY_HEADERS,
+      },
+
+    // TODO: Pass in the certificate in US-EAST-1 from the other stack so we have our own domain name
+      // domainNames: [hostedName.valueAsString + "." + hostedZoneName.valueAsString,],
+      // certificate: certificate
     });
   }
 }
