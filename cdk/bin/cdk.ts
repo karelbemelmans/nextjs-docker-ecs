@@ -6,13 +6,28 @@ import {GlobalStack} from "../global-stack";
 
 const app = new cdk.App();
 
+// DNS and ACM configuration properties
+const hostedZoneId = "Z07782082FEGGHHXXD077";
+const hostedZoneName = "dev.karelbemelmans.com";
+const hostedName = "nextjs";
+
+const region = "eu-north-1";
+
 // Resources we need to create in US-EAST-1
-new GlobalStack(app, "GlobalStack", {
+const globalStack = new GlobalStack(app, "GlobalStack", {
   env: {region: "us-east-1"},
-  crossRegionReferences: true
+  crossRegionReferences: true,
+  hostedZoneId,
+  hostedZoneName,
+  hostedName
 });
 
 // Our actual NextJS workload stack
-new NextJSStack(app, "NextJsStack", "Z07782082FEGGHHXXD077", "dev.karelbemelmans.com", "nextjs", {
-  crossRegionReferences: true
+new NextJSStack(app, "NextJsStack", {
+  env: {region},
+  crossRegionReferences: true,
+  hostedZoneId,
+  hostedZoneName,
+  hostedName,
+  certificate: globalStack.certificate
 });

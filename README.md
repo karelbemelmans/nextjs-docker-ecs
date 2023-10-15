@@ -2,7 +2,7 @@
 
 # NextJS, Docker and ECS
 
-My attempt to create a very clean NextJS project that created ECS infrastructure and deploys using Github Actions.
+My attempt to create a very clean NextJS project that creates the AWS ECS infrastructure with CDK and deploys new NextJS containers using Github Actions.
 
 ## TODO
 

@@ -8,15 +8,15 @@ import * as cloudfront_origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as ecsPatterns from "aws-cdk-lib/aws-ecs-patterns";
 import {Construct} from "constructs";
 
+interface NextJSStackProps extends cdk.StackProps {
+  hostedZoneId: string;
+  hostedZoneName: string;
+  hostedName: string;
+  certificate: acm.Certificate;
+}
+
 export class NextJSStack extends cdk.Stack {
-  constructor(
-    scope: Construct,
-    id: string,
-    hostedZoneId: string,
-    hostedZoneName: string,
-    hostedName: string,
-    props?: cdk.StackProps
-  ) {
+  constructor(scope: Construct, id: string, props: NextJSStackProps) {
     super(scope, id, props);
 
     const containerImage = new cdk.CfnParameter(this, "containerImage", {
@@ -27,20 +27,21 @@ export class NextJSStack extends cdk.Stack {
 
     // Load our existing Route53 zone
     const route53Zone = route53.HostedZone.fromHostedZoneAttributes(this, "HostedZone", {
-      hostedZoneId: hostedZoneId,
-      zoneName: hostedZoneName
+      hostedZoneId: props.hostedZoneId,
+      zoneName: props.hostedZoneName
     });
 
     // Create a new certificate to be used by the ALB listener
     const certificate = new acm.Certificate(this, "Certificate", {
-      domainName: hostedName + "." + hostedZoneName,
+      domainName: props.hostedName + "." + props.hostedZoneName,
       validation: acm.CertificateValidation.fromDns(route53Zone)
     });
 
+    // We create a custom VPC to make sure we have some control over it, in our case only that we want 2 AZ's max
     const vpc = new ec2.Vpc(this, "MyVpc", {maxAzs: 2});
     const cluster = new ecs.Cluster(this, "Cluster", {vpc});
 
-    // This will create an ALB listening on HTTP only
+    // This will create an ALB listening on HTTPS only
     const loadBalancedFargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(this, "Service", {
       cluster,
       publicLoadBalancer: true,
@@ -50,7 +51,12 @@ export class NextJSStack extends cdk.Stack {
       taskImageOptions: {
         image: ecs.ContainerImage.fromRegistry(containerImage.valueAsString),
         containerPort: 3000
-      }
+      },
+      certificate,
+
+      // Providing the DNS name and zone here will create the A ALIAS record in Route53
+      domainName: props.hostedName + "." + props.hostedZoneName,
+      domainZone: route53Zone
     });
 
     loadBalancedFargateService.targetGroup.configureHealthCheck({
@@ -67,7 +73,7 @@ export class NextJSStack extends cdk.Stack {
       defaultBehavior: {
         // We need to talk to our HTTP listener on the ALB
         origin: new cloudfront_origins.LoadBalancerV2Origin(loadBalancedFargateService.loadBalancer, {
-          protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY
+          protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY
         }),
 
         // Should be good enough for our case
@@ -78,11 +84,10 @@ export class NextJSStack extends cdk.Stack {
         cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
         originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER,
         responseHeadersPolicy: cloudfront.ResponseHeadersPolicy.SECURITY_HEADERS
-      }
+      },
 
-      // TODO: Pass in the certificate in US-EAST-1 from the other stack so we have our own domain name
-      // domainNames: [hostedName + "." + hostedZoneName,],
-      // certificate: certificate
+      domainNames: [props.hostedName + "." + props.hostedZoneName],
+      certificate: props.certificate
     });
   }
 }
