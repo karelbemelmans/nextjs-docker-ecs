@@ -1,5 +1,4 @@
 import * as cdk from "aws-cdk-lib";
-import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as route53 from "aws-cdk-lib/aws-route53";
@@ -8,7 +7,7 @@ import * as cloudfront_origins from "aws-cdk-lib/aws-cloudfront-origins"
 import * as ecsPatterns from "aws-cdk-lib/aws-ecs-patterns";
 import { Construct } from "constructs";
 
-export class CdkStack extends cdk.Stack {
+export class NextJSStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
