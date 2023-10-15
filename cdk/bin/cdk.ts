@@ -8,8 +8,11 @@ const app = new cdk.App();
 
 // Resources we need to create in US-EAST-1
 new GlobalStack(app, "GlobalStack", {
-  env: {region: "us-east-1"}
+  env: {region: "us-east-1"},
+  crossRegionReferences: true
 });
 
 // Our actual NextJS workload stack
-new NextJSStack(app, "NextJsStack", {});
+new NextJSStack(app, "NextJsStack", "Z07782082FEGGHHXXD077", "dev.karelbemelmans.com", "nextjs", {
+  crossRegionReferences: true
+});
