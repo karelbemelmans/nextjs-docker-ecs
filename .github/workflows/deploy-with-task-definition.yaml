@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy with task definition
 run-name: Deploy - ${{ github.ref_name }}
 
 on:
