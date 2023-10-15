@@ -1,4 +1,5 @@
 [![Build & Publish](https://github.com/karelbemelmans/nextjs-docker/actions/workflows/build.yaml/badge.svg)](https://github.com/karelbemelmans/nextjs-docker/actions/workflows/build.yaml)
+[![CodeQL](https://github.com/karelbemelmans/nextjs-docker/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/karelbemelmans/nextjs-docker/actions/workflows/github-code-scanning/codeql)
 
 # NextJS, Docker and ECS
 
