@@ -18,7 +18,7 @@ on:
 
 env:
   AWS_REGION: "eu-north-1"
-  STACKNAME: "NextJsStack"
+  STACK_NAME: "NextJsStack"
 
 jobs:
   deploy:
