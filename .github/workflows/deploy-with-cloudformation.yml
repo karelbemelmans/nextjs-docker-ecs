@@ -1,0 +1,34 @@
+name: Deploy with CloudFormation parameter update
+run-name: Deploy - ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_REGION: "eu-north-1"
+  STACKNAME: "NextJsStack"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update CloudFormation parameter
+        env:
+          CONTAINER_IMAGE: "ghcr.io/${{ github.repository }}:${{ github.ref_name }}"
+        run: |
+          aws cloudformation update-stack \
+            --use-previous-template \
+            --parameters ParameterKey=containerImage,ParameterValue=${{ env.CONTAINER_IMAGE }} \
+            --stack-name ${{ env.STACK_NAME }} \
+            --capabilities CAPABILITY_IAM
