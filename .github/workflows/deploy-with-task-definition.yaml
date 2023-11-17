@@ -5,10 +5,10 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_REGION: 'eu-north-1'
-  CLUSTER: 'NextJsStack-EcsDefaultClusterMnL3mNNYN926A5246-XbxbwIMZCuyB'
-  SERVICE: 'NextJsStack-Service9571FDD8-sGwmTu9RyG63'
-  TASK_DEFINITION: 'NextJsStackServiceTaskDefD5B7AF72'
+  AWS_REGION: "eu-north-1"
+  CLUSTER: "NextJsStack-ClusterEB0386A7-yUJqgvxv5N0w"
+  SERVICE: "NextJsStack-Service9571FDD8-h8Cn2fEPNZNB"
+  TASK_DEFINITION: "NextJsStackServiceTaskDefD5B7AF72"
 
 jobs:
   deploy:
@@ -43,7 +43,7 @@ jobs:
         with:
           task-definition: ./task-definition.json
           container-name: web
-          image: 'ghcr.io/${{ github.repository }}:${{ github.ref_name }}'
+          image: "ghcr.io/${{ github.repository }}:${{ github.ref_name }}"
           environment-variables: |
             DD_VERSION=${{ github.ref_name }}
             DD_TAGS=git.commit.sha:${{ github.sha }},git.repository_url:github.com/${{ github.repository }}
