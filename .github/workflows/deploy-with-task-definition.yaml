@@ -1,3 +1,21 @@
+# Deployment of an ECS service by updating the task definition used by the service.
+# This is the correct way of using the ECS deployment system.
+#
+# Pros:
+# - The correct way to handle ECS deployments
+# - Waits for deployment result
+# - Task-definition can be enriched in Github actions if needed
+# - It's still better than deploying with actual CDK deploys (or even worse Terraform)
+#
+# Cons:
+# - Github actions competes with the CDK created task definition. We solve that
+#   in this setup by first downloading the task definition, enrich it and then
+#   upload it again. But ideally we could have the task definition in our
+#   repository and use that as the source of truth.
+#   CDK needs to be altered to ream that same task definition then, which might
+#e   be an issue.
+#
+
 name: Deploy with task definition
 run-name: Deploy - ${{ github.ref_name }}
 

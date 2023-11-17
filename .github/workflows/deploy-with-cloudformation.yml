@@ -1,3 +1,15 @@
+# ECS deployment with updating the CloudFormation parameter used for the
+# container image in the CDK definition.
+#
+# Pros:
+# - Truely agnostic how the actual CDK stack was setup. No competition between
+#   2 CICD systems trying to control the same task definition.
+#
+# Cons:
+# - Does not wait for deployment result
+# - Stack does not update if we deploy the exact same tag again, as CloudFormation
+#   does not see a change in that case.
+#
 name: Deploy with CloudFormation parameter update
 run-name: Deploy - ${{ github.ref_name }}
 
