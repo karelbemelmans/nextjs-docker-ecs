@@ -10,7 +10,7 @@
 # - Stack does not update if we deploy the exact same tag again, as CloudFormation
 #   does not see a change in that case.
 #
-name: Deploy with CloudFormation parameter update
+name: Deploy with CloudFormation
 run-name: Deploy - ${{ github.ref_name }}
 
 on:
