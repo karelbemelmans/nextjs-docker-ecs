@@ -3,8 +3,8 @@ name: Release new major version
 
 on:
   push:
-    tags:
-      - v*.*.*
+  release:
+    types: [released]
 
 permissions:
   contents: write
