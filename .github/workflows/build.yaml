@@ -3,8 +3,8 @@ name: Build & Publish
 on:
   push:
     branches:
-      - '**'
-      - '!dependabot/**'
+      - "**"
+      - "!dependabot/**"
   release:
     types: [created]
 
