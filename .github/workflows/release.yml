@@ -2,7 +2,6 @@
 name: Release new major version
 
 on:
-  push:
   release:
     types: [released]
 
