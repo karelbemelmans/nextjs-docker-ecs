@@ -42,7 +42,8 @@ export class NextJSStack extends cdk.Stack {
     const vpc = new ec2.Vpc(this, "MyVpc", {maxAzs: 2});
     const cluster = new ecs.Cluster(this, "Cluster", {
       clusterName: "nextjs-cluster",
-      vpc
+      vpc,
+      containerInsights: true
     });
 
     // Container definitions
