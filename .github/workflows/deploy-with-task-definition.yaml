@@ -111,6 +111,7 @@ jobs:
             ]
           }
           EOF
+          )
 
           # TODO: Handle reponse code and return a proper fail if there was an error
           curl --request POST 'https://api.datadoghq.eu/api/v2/services/definitions' \
