@@ -26,7 +26,10 @@ env:
   AWS_REGION: "eu-north-1"
   CLUSTER: "NextJsStack-ClusterEB0386A7-yUJqgvxv5N0w"
   SERVICE: "NextJsStack-Service9571FDD8-h8Cn2fEPNZNB"
+  SLACK_CHANNEL: "https://hooks.slack.com/services/..."
   TASK_DEFINITION: "NextJsStackServiceTaskDefD5B7AF72"
+  TEAM: "R&D"
+  EMAIL: "user@example.org"
 
 jobs:
   deploy:
@@ -73,3 +76,45 @@ jobs:
           service: ${{ env.SERVICE }}
           cluster: ${{ env.CLUSTER }}
           wait-for-service-stability: true
+
+  datadog:
+    name: Update Datadog service catalog
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post DD JSON data
+        run: |
+          payload=$(cat <<-EOF
+          {
+            "schema-version": "v2",
+            "dd-service": "${{ env.SERVICE }}",
+            "team": "${{ env.TEAM }}",
+            "contacts": [
+                {
+                    "type": "slack",
+                    "contact": "${{ env.SLACK_CHANNEL }}"
+                },
+                {
+                    "type": "email",
+                    "contact": "${{ env.EMAIL }}"
+                }
+            ],
+            "repos": [
+                {
+                    "name": "${{ github.repository }}",
+                    "url": "${{ github.server_url }}/${{ github.repository }}"
+                }
+            ],
+            "tags": [
+                "foo:bar",
+                "business-unit:${{ env.TEAM }}"
+            ]
+          }
+          EOF
+
+          # TODO: Handle reponse code and return a proper fail if there was an error
+          curl --request POST 'https://api.datadoghq.eu/api/v2/services/definitions' \
+          --header 'DD-API-KEY: ${{ secrets.DATADOG_API_KEY }}' \
+          --header 'DD-APPLICATION-KEY: ${{ secrets.DATADOG_APPLICATION_KEY }}' \
+          --header 'Content-Type: application/json' \
+          -d "$payload" | jq '.'
