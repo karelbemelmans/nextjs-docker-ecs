@@ -51,9 +51,7 @@ export class NextJSStack extends cdk.Stack {
 
     // Container definition for our web container
     const webContainer = taskDefinition.addContainer("web", {
-      image: ecs.ContainerImage.fromRegistry(containerImage.valueAsString),
-      memoryLimitMiB: 512,
-      cpu: 256
+      image: ecs.ContainerImage.fromRegistry(containerImage.valueAsString)
     });
 
     // Add a port mapping for our container
@@ -69,6 +67,8 @@ export class NextJSStack extends cdk.Stack {
       publicLoadBalancer: true,
       healthCheckGracePeriod: cdk.Duration.seconds(5),
       taskDefinition,
+      memoryLimitMiB: 512,
+      cpu: 256,
       certificate,
 
       // Providing the DNS name and zone here will create the A ALIAS record in Route53
