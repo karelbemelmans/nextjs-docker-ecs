@@ -33,6 +33,7 @@ env:
 
 jobs:
   deploy:
+    name: Deploy to ECS
     runs-on: ubuntu-latest
 
     steps:
