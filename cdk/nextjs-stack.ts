@@ -5,6 +5,7 @@ import * as cloudfront_origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ecsPatterns from "aws-cdk-lib/aws-ecs-patterns";
+import * as logs from "aws-cdk-lib/aws-logs";
 import * as route53 from "aws-cdk-lib/aws-route53";
 import {Construct} from "constructs";
 
@@ -51,9 +52,21 @@ export class NextJSStack extends cdk.Stack {
       family: "nextjs-docker"
     });
 
+    // Log group
+    const logGroup = new logs.LogGroup(this, "LogGroup", {
+      retention: logs.RetentionDays.ONE_MONTH,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+
     // Container definition for our web container
+    // TODO: Add logging
     const webContainer = taskDefinition.addContainer("web", {
-      image: ecs.ContainerImage.fromRegistry(containerImage.valueAsString)
+      image: ecs.ContainerImage.fromRegistry(containerImage.valueAsString),
+      logging: new ecs.AwsLogDriver({
+        logGroup,
+        streamPrefix: "web",
+        mode: ecs.AwsLogDriverMode.NON_BLOCKING
+      })
     });
 
     // Add a port mapping for our container
