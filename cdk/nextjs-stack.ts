@@ -54,12 +54,12 @@ export class NextJSStack extends cdk.Stack {
 
     // Log group
     const logGroup = new logs.LogGroup(this, "LogGroup", {
+      logGroupName: "nextjs-docker",
       retention: logs.RetentionDays.ONE_MONTH,
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
     // Container definition for our web container
-    // TODO: Add logging
     const webContainer = taskDefinition.addContainer("web", {
       image: ecs.ContainerImage.fromRegistry(containerImage.valueAsString),
       logging: new ecs.AwsLogDriver({
@@ -94,7 +94,7 @@ export class NextJSStack extends cdk.Stack {
     });
 
     loadBalancedFargateService.targetGroup.configureHealthCheck({
-      path: "/api/hello",
+      path: "/api/status",
       healthyHttpCodes: "200",
       timeout: cdk.Duration.seconds(5),
       healthyThresholdCount: 2,
