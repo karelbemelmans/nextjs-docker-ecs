@@ -21,7 +21,7 @@ export class NextJSStack extends cdk.Stack {
 
     const containerImage = new cdk.CfnParameter(this, "containerImage", {
       type: "String",
-      description: "Container image, e.g. ghcr.io/karelbemelmans/nextjs-docker:main",
+      description: "Container image, e.g. ghcr.io/karelbemelmans/nextjs-docker:latest",
       default: "ghcr.io/karelbemelmans/nextjs-docker:main"
     });
 
@@ -39,19 +39,36 @@ export class NextJSStack extends cdk.Stack {
 
     // We create a custom VPC to make sure we have some control over it, in our case only that we want 2 AZ's max
     const vpc = new ec2.Vpc(this, "MyVpc", {maxAzs: 2});
-    const cluster = new ecs.Cluster(this, "Cluster", {vpc});
+    const cluster = new ecs.Cluster(this, "Cluster", {
+      clusterName: "nextjs-cluster",
+      vpc
+    });
+
+    // Container definitions
+    const taskDefinition = new ecs.FargateTaskDefinition(this, "TaskDef", {
+      family: "nextjs-docker"
+    });
+
+    // Container definition for our web container
+    const webContainer = taskDefinition.addContainer("web", {
+      image: ecs.ContainerImage.fromRegistry(containerImage.valueAsString),
+      memoryLimitMiB: 512,
+      cpu: 256
+    });
+
+    // Add a port mapping for our container
+    webContainer.addPortMappings({
+      containerPort: 3000,
+      protocol: ecs.Protocol.TCP
+    });
 
     // This will create an ALB listening on HTTPS only
     const loadBalancedFargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(this, "Service", {
+      serviceName: "nextjs-service",
       cluster,
       publicLoadBalancer: true,
-      memoryLimitMiB: 512,
-      cpu: 256,
       healthCheckGracePeriod: cdk.Duration.seconds(5),
-      taskImageOptions: {
-        image: ecs.ContainerImage.fromRegistry(containerImage.valueAsString),
-        containerPort: 3000
-      },
+      taskDefinition,
       certificate,
 
       // Providing the DNS name and zone here will create the A ALIAS record in Route53

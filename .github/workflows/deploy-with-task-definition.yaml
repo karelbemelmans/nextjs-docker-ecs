@@ -24,10 +24,10 @@ on:
 
 env:
   AWS_REGION: "eu-north-1"
-  CLUSTER: "NextJsStack-ClusterEB0386A7-yUJqgvxv5N0w"
-  SERVICE: "NextJsStack-Service9571FDD8-h8Cn2fEPNZNB"
+  CLUSTER: "nextjs-cluster"
+  SERVICE: "nextjs-service"
+  TASK_DEFINITION: "nextjs-docker"
   SLACK_CHANNEL: "https://hooks.slack.com/services/..."
-  TASK_DEFINITION: "NextJsStackServiceTaskDefD5B7AF72"
   TEAM: "R&D"
   EMAIL: "user@example.org"
 
