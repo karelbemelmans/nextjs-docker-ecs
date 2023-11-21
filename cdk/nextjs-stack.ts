@@ -19,6 +19,7 @@ export class NextJSStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: NextJSStackProps) {
     super(scope, id, props);
 
+    // TODO: Read values from next.js config file
     const containerImage = new cdk.CfnParameter(this, "containerImage", {
       type: "String",
       description: "Container image, e.g. ghcr.io/karelbemelmans/nextjs-docker:latest",
@@ -67,9 +68,11 @@ export class NextJSStack extends cdk.Stack {
       publicLoadBalancer: true,
       healthCheckGracePeriod: cdk.Duration.seconds(5),
       taskDefinition,
+      certificate,
+
+      // TODO: Our limit for the service should be the combined memory for all containers
       memoryLimitMiB: 512,
       cpu: 256,
-      certificate,
 
       // Providing the DNS name and zone here will create the A ALIAS record in Route53
       domainName: props.hostedName + "." + props.hostedZoneName,
