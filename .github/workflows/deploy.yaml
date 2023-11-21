@@ -16,7 +16,7 @@
 #e   be an issue.
 #
 
-name: Deploy with task definition
+name: Deploy
 run-name: Deploy - ${{ github.ref_name }}
 
 on:
