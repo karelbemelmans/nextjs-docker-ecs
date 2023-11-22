@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
 import "source-map-support/register";
-import {DatabaseStack} from "../database-stack";
 import {GlobalStack} from "../global-stack";
 import {NextJSStack} from "../nextjs-stack";
 
@@ -21,11 +20,6 @@ const globalStack = new GlobalStack(app, "GlobalStack", {
   hostedZoneId,
   hostedZoneName,
   hostedName
-});
-
-// Database stack
-const databaseStack = new DatabaseStack(app, "DatabaseStack", {
-  env: {region}
 });
 
 // Our actual NextJS workload stack
