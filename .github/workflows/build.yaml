@@ -10,6 +10,7 @@ on:
   pull_request:
     branches:
       - "main"
+      - "!dependabot/**"
 
 env:
   REGISTRY: ghcr.io
