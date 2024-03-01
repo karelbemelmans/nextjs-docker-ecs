@@ -6,7 +6,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.128.0",
+    "aws-cdk-lib": "2.130.0",
     "constructs": "^10.3.0",
     "next": "latest",
     "react": "^18.2.0",
