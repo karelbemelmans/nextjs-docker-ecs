@@ -1,11 +1,11 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: nextjs-docker
+  name: nextjs-docker-ecs
   description: "NextJS Docker"
   tags: [nextjs]
   annotations:
-    github.com/project-slug: karelbemelmans/nextjs-docker
+    github.com/project-slug: karelbemelmans/nextjs-docker-ecs
 spec:
   type: service
   owner: "user:default/karelbemelmans"
