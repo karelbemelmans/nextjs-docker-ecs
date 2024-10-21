@@ -3,5 +3,11 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
+  },
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": [
+      "file:///home/karel/Github/karelbemelmans/nextjs-docker-ecs/.github/workflows/deploy.yaml",
+      "file:///home/karel/Github/karelbemelmans/nextjs-docker-ecs/.github/workflows/build.yaml"
+    ]
   }
 }
