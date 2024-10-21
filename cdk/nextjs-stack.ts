@@ -7,7 +7,7 @@ import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ecsPatterns from "aws-cdk-lib/aws-ecs-patterns";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as route53 from "aws-cdk-lib/aws-route53";
-import {Construct} from "constructs";
+import { Construct } from "constructs";
 
 interface NextJSStackProps extends cdk.StackProps {
   hostedZoneId: string;
@@ -23,8 +23,8 @@ export class NextJSStack extends cdk.Stack {
     // TODO: Read values from next.js config file
     const containerImage = new cdk.CfnParameter(this, "containerImage", {
       type: "String",
-      description: "Container image, e.g. ghcr.io/karelbemelmans/nextjs-docker:latest",
-      default: "ghcr.io/karelbemelmans/nextjs-docker:main"
+      description: "Container image, e.g. ghcr.io/karelbemelmans/nextjs-docker-ecs:latest",
+      default: "ghcr.io/karelbemelmans/nextjs-docker-ecs:main"
     });
 
     // Load our existing Route53 zone
