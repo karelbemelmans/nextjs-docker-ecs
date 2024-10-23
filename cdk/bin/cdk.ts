@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
 import "source-map-support/register";
-import { GlobalStack } from "../global-stack";
-import { NextJSStack } from "../nextjs-stack";
+import { GlobalStack } from "../lib/global-stack";
+import { NextJSStack } from "../lib/nextjs-stack";
 
 const app = new cdk.App();
 
