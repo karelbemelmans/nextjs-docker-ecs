@@ -9,7 +9,20 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    commit-message:
+      prefix: "gha"
+      include: "scope"
+
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "monthly"
+    commit-message:
+      prefix: "npm"
+      include: "scope"
+    groups:
+      aws-cdk:
+        applies-to: version-updates
+        patterns:
+          - "aws-cdk"
+          - "aws-cdk-lib"
