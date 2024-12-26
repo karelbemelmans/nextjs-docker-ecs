@@ -1,4 +1,4 @@
-name: Docker build (on agent)
+name: Docker build
 
 on:
   push:
@@ -69,7 +69,6 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          file: Dockerfile.runner
           push: true
           platforms: linux/arm64, linux/amd64
           build-args: |
