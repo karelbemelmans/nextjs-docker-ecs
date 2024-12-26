@@ -16,8 +16,7 @@
 #e   be an issue.
 #
 
-name: Deploy new Docker image to ECS
-run-name: Deploy - ${{ github.ref_name }}
+name: ECS Deploy
 
 on:
   workflow_dispatch:
