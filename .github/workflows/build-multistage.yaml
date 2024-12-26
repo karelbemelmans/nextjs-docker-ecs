@@ -1,4 +1,4 @@
-name: Build & Publish Docker image
+name: Build & Publish Docker image (multistage)
 
 on:
   push:
@@ -49,6 +49,8 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
+          context: .
+          file: Dockerfile.multistage
           push: true
           build-args: |
             NODE_VERSION=${{env.NODE_VERSION}}
