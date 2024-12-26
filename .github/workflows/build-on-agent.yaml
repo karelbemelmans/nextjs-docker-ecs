@@ -71,7 +71,7 @@ jobs:
           context: .
           file: Dockerfile.runner
           push: true
-          platform: linux/amd64,linux/arm64
+          platforms: linux/arm64, linux/amd64
           build-args: |
             NODE_VERSION=${{env.NODE_VERSION}}
           tags: ${{ steps.meta.outputs.tags }}
