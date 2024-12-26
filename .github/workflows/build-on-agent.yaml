@@ -16,13 +16,13 @@ env:
   REGISTRY: ghcr.io
   NODE_VERSION: 20
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   next-build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout
@@ -45,6 +45,8 @@ jobs:
       - name: DEBUG
         run: |
           ls -al
+          ls -al .next
+          ls -al .next/static
 
       - name: Login to container registry
         uses: docker/login-action@v3
