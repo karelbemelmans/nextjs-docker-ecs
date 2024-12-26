@@ -1,4 +1,4 @@
-name: Build & Publish Docker image (on Github agent)
+name: Docker build (on agent)
 
 on:
   push:
